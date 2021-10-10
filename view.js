@@ -4,7 +4,7 @@ import { GlobalStore } from "./store.js";
 const PageTemplate = () => {
   return `
     <header>
-        <h1>SPA with Function Based View 
+        <h1>SPA Example with Function Based View
             <button>reset contents</button>
         </h1>
         <input type="text" placeholder="Enter left text">
@@ -21,11 +21,11 @@ const PageTemplate = () => {
 export const PageView = View(PageTemplate, "$app", {
   $header: "header",
   $content: ".section_container",
+  $reset_btn: ["button", 0],
   $left_btn: ["button", 1],
   $fetch_btn: ["button", 2],
   $fetch2_btn: ["button", 3],
   $right_btn: ["button", 4],
-  $reset_btn: ["button", 0],
   $left_input: ["input", 0],
   $right_input: ["input", 1],
   $right_loading: ".loading",
