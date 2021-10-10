@@ -2,6 +2,7 @@ import { Store } from "./core.js";
 
 export const GlobalStore = new Store({
   list: ["please fetch"],
+  fetched_item: "",
   left_title: "Left Box",
   right_title: "Right Box",
   left: "first text",

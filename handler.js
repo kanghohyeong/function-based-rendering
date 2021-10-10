@@ -8,6 +8,21 @@ const getRandomColor = () => {
   return `rgb(${R},${G},${B})`;
 };
 
+const asyncFetchList = ($btn) => {
+  const FETCH_ITEMS = Math.ceil(Math.random() * 20);
+  Array(FETCH_ITEMS)
+    .fill(0)
+    .forEach((_, idx) => {
+      const fetch_time = Math.random() * 2000 + 1000;
+      setTimeout(() => {
+        const list = [...GlobalStore.getState("list")];
+        GlobalStore.setState("fetched_item", `list ${idx}`);
+        list.push(`list ${idx}`);
+        GlobalStore.setState("list", list, false);
+      }, fetch_time);
+    });
+};
+
 const fetchList = ($btn) => {
   const fetch_time = Math.random() * 2000 + 1000;
   GlobalStore.setState("list", []);
@@ -56,9 +71,12 @@ export const syncBtnHandler = Handler(({ $left_btn, $left_input, $reset_btn }) =
 });
 
 export const fetchBtnHandler = Handler(
-  ({ $fetch_btn, $right_btn, $right_input, $right_loading }) => {
+  ({ $fetch_btn, $fetch2_btn, $right_btn, $right_input, $right_loading }) => {
     $fetch_btn.addEventListener("click", () => {
       fetchList($fetch_btn);
+    });
+    $fetch2_btn.addEventListener("click", () => {
+      asyncFetchList($fetch2_btn);
     });
 
     $right_btn.addEventListener("click", () => {

@@ -9,7 +9,8 @@ const PageTemplate = () => {
         </h1>
         <input type="text" placeholder="Enter left text">
         <button disabled>redraw left</button>
-        <button>fetch center</button>
+        <button>fetch 1 center</button>
+        <button>fetch 2 center</button>
         <button disabled>append right</button>
         <input type="text" placeholder="Enter right text">
         <span class="loading"></span>
@@ -22,7 +23,8 @@ export const PageView = View(PageTemplate, "$app", {
   $content: ".section_container",
   $left_btn: ["button", 1],
   $fetch_btn: ["button", 2],
-  $right_btn: ["button", 3],
+  $fetch2_btn: ["button", 3],
+  $right_btn: ["button", 4],
   $reset_btn: ["button", 0],
   $left_input: ["input", 0],
   $right_input: ["input", 1],
@@ -42,16 +44,23 @@ export const ContentView = View(ContentTemplate, "$content", {
   $right: ".right",
 });
 
+const ListItemTemplate = (states) => {
+  return `
+    <div class="list">${states.value}</div>
+    `;
+};
+export const ListItemView = View(
+  ListItemTemplate,
+  "$center",
+  { $list: ".list" },
+  { value: "fetched_item" },
+  GlobalStore
+);
+
 const ListTemplate = (states) => {
   const list = states.list;
   if (!list.length) return `<div class="loading">loading...</div>`;
-  return list
-    .map((value) => {
-      return `
-        <div class="list">${value}</div>
-        `;
-    })
-    .reduce((prev, cur) => prev + cur, "");
+  return list.map((value) => ListItemTemplate({ value })).reduce((prev, cur) => prev + cur, "");
 };
 export const ListView = View(
   ListTemplate,

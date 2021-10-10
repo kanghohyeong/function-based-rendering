@@ -1,4 +1,11 @@
-import { ListView, LeftBoxView, RightBoxView, PageView, DefaultSectionView } from "./view.js";
+import {
+  ListView,
+  ListItemView,
+  LeftBoxView,
+  RightBoxView,
+  PageView,
+  DefaultSectionView,
+} from "./view.js";
 import { listColorHandler, validBtnHandler, syncBtnHandler, fetchBtnHandler } from "./handler.js";
 import { renderPipe } from "./core.js";
 import { GlobalStore } from "./store.js";
@@ -12,6 +19,13 @@ GlobalStore.bindView(
   ".section_container",
   "$content",
   true
+);
+GlobalStore.bindView(
+  "fetched_item",
+  renderPipe(ListItemView, listColorHandler),
+  ".center",
+  "$center",
+  false
 );
 
 (function () {
