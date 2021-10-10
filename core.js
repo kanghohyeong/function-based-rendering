@@ -1,8 +1,8 @@
 const renderPipe =
-  (...views) =>
+  (...funcs) =>
   (dom) => {
-    return views.reduce((dom, view) => {
-      return view(dom);
+    return funcs.reduce((dom, func) => {
+      return func(dom);
     }, dom);
   };
 
