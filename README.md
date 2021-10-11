@@ -18,11 +18,13 @@
 
 ![image](https://user-images.githubusercontent.com/63776725/136702882-1e9f905f-a8cb-4d99-9762-d62745612517.png)
 
-The rendering process can be implemented as a series of functions that add children from the top-level DOM object.
+The rendering process can be implemented as a series of functions that add and modify children from the top-level DOM object.
 
 
 
-## core.js (code for creating Views by function composition)
+## core.js
+
+**Code that makes it easier to implement function based rendering**
 
 ```javascript
 /*
@@ -38,7 +40,7 @@ const renderPipe =
   };
 
 /*
-Injects context into the template and rendering.
+Inject context(state,parent element) into the template and Render.
 Return custom DOM which the newly created child elements are added.
 */
 const View = (template, $parent, children, states, store) => (dom) => {
@@ -72,13 +74,62 @@ const View = (template, $parent, children, states, store) => (dom) => {
 
 /*
 Injects logic into target elements in the custom DOM.
-Since the custom DOM already contains the necessary elements, it is possible to minimize the situation in which the real DOM needs to be accessed, such as using querySelector.
 */
 const Handler = (logic) => (dom) => {
   logic(dom);
   return dom;
 };
 ```
+
+
+
+## view
+
+```javascript
+const BoxTemplate = (states) => {
+  return `
+    <h2>${states.name}</h2>
+    <div class="box">${states.value}</div>
+    `;
+};
+export const LeftBoxView = View(
+  BoxTemplate, 
+  "$left", // key value of parent element in custom DOM
+  { $left_box: ".box" }, // child element which add to custom DOM
+  { name: "left_title", value: "left" }, // states
+  GlobalStore // store which contains states
+);
+export const RightBoxView = View(
+  BoxTemplate,
+  "$right",
+  { $right_box: ".box" },
+  { name: "right_title", value: "right" },
+  GlobalStore
+);
+```
+
+Example of using a simple `view function` used in the actual example. The template was reused. The `view function` allows the template to be drawn with the desired state in the desired location. As long as the parent key value exists in the custom DOM, the view can also be reused as much as possible.
+
+
+
+## Handler
+
+```javascript
+export const validBtnHandler = Handler(({ $left_btn, $left_input, $right_btn, $right_input }) => {
+  $left_input.addEventListener("input", () => {
+    if ($left_input.value.length) $left_btn.disabled = false;
+    else $left_btn.disabled = true;
+  });
+  $right_input.addEventListener("input", () => {
+    if ($right_input.value.length) $right_btn.disabled = false;
+    else $right_btn.disabled = true;
+  });
+});
+```
+
+The `handler function` is a wrapper function that receives a custom DOM, processes logic, and returns the custom DOM again. Since the custom DOM already contains the necessary elements, it is possible to minimize the situation in which the real DOM needs to be accessed, such as using `querySelector`.  This dramatically reduces unnecessary complexity.
+
+
 
 
 
